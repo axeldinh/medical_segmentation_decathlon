@@ -1,0 +1,39 @@
+[model]
+name = "UNetModule"
+kwargs.spatial_dims = 3
+kwargs.in_channels = 1
+kwargs.out_channels = 1
+kwargs.channels = [2, 4]
+kwargs.strides = [2]
+kwargs.kernel_size = 3
+
+[data]
+name = "HeartDataModule"
+kwargs.root = "data"
+kwargs.batch_size = 2
+kwargs.val_split = 0.1
+kwargs.num_workers = 0
+
+[data.kwargs.transforms_kwargs.train]
+names = ["LoadImaged", "EnsureChannelFirstd", "NormalizeIntensityd", "RandFlipd", "RandAffined", "DivisiblePadd", "ToTensord"]
+LoadImaged.keys = ["image", "label"]
+EnsureChannelFirstd.keys = ["image", "label"]
+NormalizeIntensityd.keys = ["image"]
+RandFlipd.keys = ["image", "label"]
+RandAffined.keys = ["image", "label"]
+DivisiblePadd.keys = ["image", "label"]
+DivisiblePadd.k = 2
+ToTensord.keys = ["image", "label"]
+
+[data.kwargs.transforms_kwargs.val]
+names = ["LoadImaged", "EnsureChannelFirstd", "NormalizeIntensityd", "DivisiblePadd", "ToTensord"]
+LoadImaged.keys = ["image", "label"]
+EnsureChannelFirstd.keys = ["image", "label"]
+NormalizeIntensityd.keys = ["image"]
+DivisiblePadd.keys = ["image", "label"]
+DivisiblePadd.k = 2
+ToTensord.keys = ["image", "label"]
+
+[data.kwargs.transforms_kwargs.test]
+names = ["LoadImage", "EnsureChannelFirst", "NormalizeIntensity", "DivisiblePad", "ToTensor"]
+DivisiblePad.k = 2

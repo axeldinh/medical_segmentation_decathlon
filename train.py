@@ -5,7 +5,7 @@ from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
 import datasets
 import modules
 
-import yaml
+import toml
 
 if torch.cuda.is_available():
     device = "cuda"
@@ -16,8 +16,8 @@ else:
 
 if __name__ == "__main__":
 
-    with open("config.yaml", "r") as f:
-        config = yaml.safe_load(f)
+    with open("config.toml", "r") as f:
+        config = toml.load(f)
 
     model_cfg = config["model"]
     model = getattr(modules, model_cfg["name"])(**model_cfg["kwargs"])
