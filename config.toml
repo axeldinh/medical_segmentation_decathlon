@@ -1,16 +1,28 @@
+[trainer]
+max_epochs=100
+accelerator="cuda"
+log_every_n_steps=1
+
+[loggers]
+names = ["WandbLogger", "TensorBoardLogger"]
+WandbLogger.name = "UNet"
+WandbLogger.project = "medical_segmentation_decathlon"
+WandbLogger.group = "train"
+TensorBoardLogger.save_dir = "logs"
+
 [model]
 name = "UNetModule"
 kwargs.spatial_dims = 3
 kwargs.in_channels = 1
-kwargs.out_channels = 1
-kwargs.channels = [2, 4]
-kwargs.strides = [2]
+kwargs.out_channels = 2
+kwargs.channels = [16, 32, 64, 128, 256]
+kwargs.strides = [2, 2, 2, 2]
 kwargs.kernel_size = 3
 
 [data]
 name = "HeartDataModule"
 kwargs.root = "data"
-kwargs.batch_size = 2
+kwargs.batch_size = 8
 kwargs.val_split = 0.1
 kwargs.num_workers = 0
 
@@ -22,7 +34,7 @@ NormalizeIntensityd.keys = ["image"]
 RandFlipd.keys = ["image", "label"]
 RandAffined.keys = ["image", "label"]
 DivisiblePadd.keys = ["image", "label"]
-DivisiblePadd.k = 2
+DivisiblePadd.k = 16
 ToTensord.keys = ["image", "label"]
 
 [data.kwargs.transforms_kwargs.val]
@@ -31,9 +43,9 @@ LoadImaged.keys = ["image", "label"]
 EnsureChannelFirstd.keys = ["image", "label"]
 NormalizeIntensityd.keys = ["image"]
 DivisiblePadd.keys = ["image", "label"]
-DivisiblePadd.k = 2
+DivisiblePadd.k = 16
 ToTensord.keys = ["image", "label"]
 
 [data.kwargs.transforms_kwargs.test]
 names = ["LoadImage", "EnsureChannelFirst", "NormalizeIntensity", "DivisiblePad", "ToTensor"]
-DivisiblePad.k = 2
+DivisiblePad.k = 16

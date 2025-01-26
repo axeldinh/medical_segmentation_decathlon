@@ -23,7 +23,6 @@ class HeartDataModule(LightningDataModule):
             val_frac=val_split,
             download=True,
         )
-        self.save_hyperparameters()
 
     def prepare_data(self):
         if not os.path.exists(os.path.join(self.root, "Task02_Heart")):

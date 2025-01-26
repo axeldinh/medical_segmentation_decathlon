@@ -1,15 +1,13 @@
 import lightning as L
+import lightning.pytorch.loggers as lightning_loggers
 import toml
 import torch
-from lightning.pytorch.loggers import TensorBoardLogger, WandbLogger
 
 import datasets
 import modules
 
 if torch.cuda.is_available():
     device = "cuda"
-# elif torch.mps.is_available():
-#     device = "mps"
 else:
     device = "cpu"
 
@@ -23,20 +21,12 @@ if __name__ == "__main__":
     data_cfg = config["data"]
     data_module = getattr(datasets, data_cfg["name"])(**data_cfg["kwargs"])
 
-    loggers = [
-        TensorBoardLogger("logs"),
-        WandbLogger(
-            name="unet¨",
-            project="medical_segmentation_decathlon",
-            group="train",
-            config=config,
-        ),
-    ]
+    loggers = []
+    for name in config["loggers"]["names"]:
+        kwargs = config["loggers"][name].copy()
+        if name == "WandbLogger":
+            kwargs["config"] = config
+        loggers.append(getattr(lightning_loggers, name)(**kwargs))
 
-    trainer = L.Trainer(
-        max_epochs=100,
-        accelerator=device,
-        logger=loggers,
-        log_every_n_steps=1,
-    )
+    trainer = L.Trainer(logger=loggers, **config["trainer"])
     trainer.fit(model, data_module)

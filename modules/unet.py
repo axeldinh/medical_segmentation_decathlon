@@ -70,7 +70,7 @@ class UNetModule(LightningModule):
                 spacings=(1, 1, 1),
                 filename="tmp.obj",
             )
-            wandb.log({"Predictions": wandb.Object3D("tmp.obj")})
+            wandb.log({f"Predictions {i}": wandb.Object3D("tmp.obj")})
             os.remove("tmp.obj")
         return loss
 
