@@ -9,6 +9,7 @@ dependencies = [
     "monai[ignite,nibabel,tqdm]>=1.4.0",
     "opencv-python>=4.11.0.86",
     "ruff>=0.9.3",
+    "scipy>=1.15.1",
     "tensorboard>=2.18.0",
     "tensorboardx>=2.6.2.2",
     "toml>=0.10.2",

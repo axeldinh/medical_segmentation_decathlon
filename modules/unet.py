@@ -1,9 +1,15 @@
+import os
 from typing import Sequence
+
+import torch
+import wandb
 from lightning import LightningModule
 from monai.losses import DiceCELoss
-from monai.networks.nets import UNet
-import torch
 from monai.networks.layers.factories import Act, Norm
+from monai.networks.nets import UNet
+
+from utils.to_obj import array_to_obj
+
 
 class UNetModule(LightningModule):
     def __init__(
@@ -50,13 +56,22 @@ class UNetModule(LightningModule):
         loss = self.loss_function(prediction, label)
         self.log("loss", loss, prog_bar=True, on_step=True, on_epoch=True)
         return loss
-    
+
     def validation_step(self, batch):
         image = batch["image"]
         label = batch["label"]
-        prediction = self.model(image)
-        loss = self.loss_function(prediction, label)
+        output = self.model(image)
+        loss = self.loss_function(output, label)
         self.log("val_loss", loss, prog_bar=True, on_step=False, on_epoch=True)
+        prediction = torch.argmax(output, dim=1)
+        for i in range(prediction.shape[0]):
+            array_to_obj(
+                array=prediction[i].cpu().numpy(),
+                spacings=(1, 1, 1),
+                filename="tmp.obj",
+            )
+            wandb.log({"Predictions": wandb.Object3D("tmp.obj")})
+            os.remove("tmp.obj")
         return loss
 
     def configure_optimizers(self):
