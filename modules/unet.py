@@ -76,7 +76,7 @@ class UNetModule(LightningModule):
             wandb.log(
                 {
                     f"Prediction {i}": wandb.Video(
-                        overlay.permute(3, 0, 1, 2), fps=4, format="gif"
+                        overlay.permute(3, 0, 1, 2).detach().cpu(), fps=4, format="gif"
                     )
                 }
             )
