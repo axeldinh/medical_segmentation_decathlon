@@ -22,7 +22,6 @@ kwargs.kernel_size = 3
 [data]
 name = "HeartDataModule"
 kwargs.root = "data"
-kwargs.batch_size = 8
 kwargs.val_split = 0.1
 kwargs.num_workers = 0
 

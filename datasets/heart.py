@@ -10,10 +10,10 @@ from .transforms import make_transforms
 
 
 class HeartDataModule(LightningDataModule):
-    def __init__(self, root="data", transforms_kwargs={}, batch_size=2, val_split=0.1, num_workers=4):
+    def __init__(self, root="data", transforms_kwargs={}, val_split=0.1, num_workers=4):
         super().__init__()
         self.root = root
-        self.batch_size = batch_size
+        self.batch_size = 1
         self.num_workers = num_workers
         self.transforms_kwargs = transforms_kwargs
         self.data_kwargs = dict(
@@ -29,9 +29,8 @@ class HeartDataModule(LightningDataModule):
             DecathlonDataset(**self.data_kwargs)
 
     def setup(self, stage):
-
         transforms = make_transforms(self.transforms_kwargs)
-        
+
         train_transform = transforms[0]
         val_transform = transforms[1]
         test_transform = transforms[2]
@@ -39,19 +38,13 @@ class HeartDataModule(LightningDataModule):
         self.data_kwargs["download"] = False
         if stage == "fit":
             self.data_kwargs["section"] = "training"
-            self.train = DecathlonDataset(
-                transform=train_transform, **self.data_kwargs
-            )
+            self.train = DecathlonDataset(transform=train_transform, **self.data_kwargs)
             self.data_kwargs["section"] = "validation"
-            self.val = DecathlonDataset(
-                transform=val_transform, **self.data_kwargs
-            )
+            self.val = DecathlonDataset(transform=val_transform, **self.data_kwargs)
 
         if stage == "predict":
             self.data_kwargs["section"] = "test"
-            self.test = DecathlonDataset(
-                transform=test_transform, **self.data_kwargs
-            )
+            self.test = DecathlonDataset(transform=test_transform, **self.data_kwargs)
 
     def collate_fn(self, batch):
         sizes = [item["image"].shape[-1] for item in batch]

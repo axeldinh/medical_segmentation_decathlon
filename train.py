@@ -1,5 +1,12 @@
 import lightning as L
 import lightning.pytorch.loggers as lightning_loggers
+from lightning.pytorch.callbacks import (
+    BatchSizeFinder,
+    DeviceStatsMonitor,
+    LearningRateFinder,
+    ModelCheckpoint,
+    RichProgressBar,
+)
 import toml
 import torch
 
@@ -28,5 +35,13 @@ if __name__ == "__main__":
             kwargs["config"] = config
         loggers.append(getattr(lightning_loggers, name)(**kwargs))
 
-    trainer = L.Trainer(logger=loggers, **config["trainer"])
+    callbacks = [
+        BatchSizeFinder(),
+        LearningRateFinder(),
+        ModelCheckpoint(),
+        DeviceStatsMonitor(),
+        RichProgressBar(),
+    ]
+
+    trainer = L.Trainer(logger=loggers, callbacks=callbacks, **config["trainer"])
     trainer.fit(model, data_module)
