@@ -75,7 +75,7 @@ class UNetModule(LightningModule):
             overlay = (overlay * 255).to(torch.uint8)
             wandb.log(
                 {
-                    f"Prediction {i}": wandb.Video(
+                    f"Gif Validation {i}": wandb.Video(
                         overlay.permute(3, 0, 1, 2).detach().cpu(), fps=4, format="gif"
                     )
                 }
@@ -85,7 +85,7 @@ class UNetModule(LightningModule):
                 spacings=(1, 1, 1),
                 color=(255, 0, 0),
             )
-            wandb.log({f"Predictions {i}": wandb.Object3D(vertices)})
+            wandb.log({f"Point Cloud Validation {i}": wandb.Object3D(vertices)})
         return loss
 
     def configure_optimizers(self):
