@@ -1,9 +1,7 @@
 import lightning as L
 import lightning.pytorch.loggers as lightning_loggers
 from lightning.pytorch.callbacks import (
-    BatchSizeFinder,
     DeviceStatsMonitor,
-    LearningRateFinder,
     ModelCheckpoint,
     RichProgressBar,
 )
@@ -36,8 +34,6 @@ if __name__ == "__main__":
         loggers.append(getattr(lightning_loggers, name)(**kwargs))
 
     callbacks = [
-        BatchSizeFinder(),
-        LearningRateFinder(),
         ModelCheckpoint(),
         DeviceStatsMonitor(),
         RichProgressBar(),

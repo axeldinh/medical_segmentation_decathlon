@@ -19,9 +19,14 @@ kwargs.channels = [16, 32, 64, 128, 256]
 kwargs.strides = [2, 2, 2, 2]
 kwargs.kernel_size = 3
 
+[model.optimizer_config]
+name = "Adam"
+kwargs.lr = 3e-4
+
 [data]
 name = "HeartDataModule"
 kwargs.root = "data"
+kwargs.batch_size = 1
 kwargs.val_split = 0.1
 kwargs.num_workers = 0
 

@@ -1,5 +1,4 @@
-import os
-from typing import Sequence
+from typing import Dict, Sequence
 
 import torch
 import wandb
@@ -28,6 +27,7 @@ class UNetModule(LightningModule):
         dropout: float = 0.0,
         bias: bool = True,
         adn_ordering: str = "NDA",
+        optimizer_config: Dict = {"name": "Adam", "kwargs": {"lr": 3e-4}},
     ):
         super().__init__()
         self.model = UNet(
@@ -46,7 +46,7 @@ class UNetModule(LightningModule):
             adn_ordering=adn_ordering,
         )
         self.loss_function = DiceCELoss(include_background=True, to_onehot_y=True)
-        self.lr = 3e-4
+        self.optimizer_config = optimizer_config
 
     def forward(self, image):
         return self.model(image)
@@ -89,4 +89,6 @@ class UNetModule(LightningModule):
         return loss
 
     def configure_optimizers(self):
-        return torch.optim.Adam(self.model.parameters(), lr=self.lr)
+        return getattr(torch.optim, self.optimizer_config["name"])(
+            self.model.parameters(), **self.optimizer_config["kwargs"]
+        )

@@ -10,7 +10,7 @@ from .transforms import make_transforms
 
 
 class HeartDataModule(LightningDataModule):
-    def __init__(self, root="data", transforms_kwargs={}, val_split=0.1, num_workers=4):
+    def __init__(self, root="data", transforms_kwargs={}, batch_size=1, val_split=0.1, num_workers=4):
         super().__init__()
         self.root = root
         self.batch_size = 1
