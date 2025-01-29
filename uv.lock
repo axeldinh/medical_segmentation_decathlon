@@ -870,6 +870,7 @@ dependencies = [
     { name = "tensorboard" },
     { name = "tensorboardx" },
     { name = "toml" },
+    { name = "torchmetrics" },
     { name = "trimesh" },
     { name = "wandb" },
 ]
@@ -887,6 +888,7 @@ requires-dist = [
     { name = "tensorboard", specifier = ">=2.18.0" },
     { name = "tensorboardx", specifier = ">=2.6.2.2" },
     { name = "toml", specifier = ">=0.10.2" },
+    { name = "torchmetrics", specifier = ">=1.6.1" },
     { name = "trimesh", specifier = ">=4.6.0" },
     { name = "wandb", specifier = ">=0.19.4" },
 ]

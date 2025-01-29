@@ -9,6 +9,7 @@ WandbLogger.name = "UNet"
 WandbLogger.project = "medical_segmentation_decathlon"
 WandbLogger.group = "train"
 TensorBoardLogger.save_dir = "logs"
+WandbLogger.log_model = true
 
 [model]
 name = "UNetModule"
