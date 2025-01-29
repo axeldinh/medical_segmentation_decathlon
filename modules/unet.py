@@ -116,9 +116,9 @@ class UNetModule(LightningModule):
             self.mean_iou.update(pred, label)
             self.dice_score.update(pred, label)
             true_positives = (pred == label).to(int) * label
-            # true_negatives = (pred != label).to(int) * (1 - label)
+            # true_negatives = (pred == label).to(int) * (1 - label)
             false_positives = (pred != label).to(int) * pred
-            false_negatives = (pred == label).to(int) * (1 - pred)
+            false_negatives = (pred != label).to(int) * (1 - pred)
             overlay = blend_images(img, (true_positives).unsqueeze(0), cmap="Greens")
             overlay = blend_images(
                 overlay, (false_positives + false_negatives).unsqueeze(0), cmap="Reds"
